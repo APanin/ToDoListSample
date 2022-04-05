@@ -1,0 +1,426 @@
+openapi: 3.0.0
+
+info:
+  description: ToDo list sample app web frontend API
+  version: 1.0.0
+  title: ToDo-Web-API
+paths:
+  /tasks/{userId}:
+    get:
+      summary: 'List todo items by user'
+      description: ''
+      operationId: tasks-get
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: User identifier
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return
+        - in: query
+          name: after_id
+          schema:
+            type: integer
+          description: Lower bound of query limit
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/task'
+        '400':
+          description: Incorrect request parameters. Please, supply the correct parameters and try again
+        '401':
+          description: Login required
+        '403':
+          description: User is not authorized to recieve the data requested
+        '404':
+          description: Requested resource not found
+        '500':
+          description: Unexpected error
+  /task/{taskId}:
+    get:
+      summary: 'Get task by id'
+      description: ''
+      operationId: task-get
+      parameters:
+        - in: path
+          name: taskId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Task identifier
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/task'
+        '400':
+          description: Incorrect request parameters. Please, supply the correct parameters and try again
+        '401':
+          description: Login required
+        '403':
+          description: User is not authorized to recieve the data requested
+        '404':
+          description: Requested resource not found
+        '500':
+          description: Unexpected error
+    delete:
+      summary: 'Delete task by id'
+      description: ''
+      operationId: task-delete
+      parameters:
+        - in: path
+          name: taskId
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Task identifier
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Incorrect request parameters. Please, supply the correct parameters and try again
+        '401':
+          description: Login required
+        '403':
+          description: User is not authorized to recieve the data requested
+        '404':
+          description: Requested resource not found
+        '500':
+          description: Unexpected error
+  /task:
+    post:
+      summary: 'Create new task'
+      description: ''
+      operationId: task-post
+      responses:
+        '201':
+          description: Task created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/task'
+        '400':
+          description: Incorrect request body. Please, supply the correct request body and try again
+        '401':
+          description: Login required
+        '403':
+          description: User is not authorized to recieve the data requested
+        '404':
+          description: Requested resource not found
+        '500':
+          description: Unexpected error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/task'
+    put:
+      summary: 'Update a task'
+      description: ''
+      operationId: task-put
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: Incorrect request body. Please, supply the correct request body and try again
+        '401':
+          description: Login required
+        '403':
+          description: User is not authorized to recieve the data requested
+        '404':
+          description: Requested resource not found
+        '500':
+          description: Unexpected error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/task'
+  /users:
+    get:
+      summary: 'List all users'
+      description: ''
+      operationId: users-get
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return
+        - in: query
+          name: after_id
+          schema:
+            type: integer
+          description: Lower bound of query limit
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/user'
+        '400':
+          description: Incorrect request parameters. Please, supply the correct parameters and try again
+        '401':
+          description: Login required
+        '403':
+          description: User is not authorized to recieve the data requested
+        '404':
+          description: Requested resource not found
+        '500':
+          description: Unexpected error
+  /user/{id}:
+    get:
+      summary: 'Get user by id'
+      description: ''
+      operationId: user-get
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: User identifier
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '400':
+          description: Incorrect request parameters. Please, supply the correct parameters and try again
+        '401':
+          description: Login required
+        '403':
+          description: User is not authorized to recieve the data requested
+        '404':
+          description: Requested resource not found
+        '500':
+          description: Unexpected error
+    delete:
+      summary: 'Delete user by id'
+      description: ''
+      operationId: user-delete
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            format: int64
+          required: true
+          description: Task identifier
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Incorrect request parameters. Please, supply the correct parameters and try again
+        '401':
+          description: Login required
+        '403':
+          description: User is not authorized to recieve the data requested
+        '404':
+          description: Requested resource not found
+        '500':
+          description: Unexpected error
+  /user:
+    post:
+      summary: 'Create new user'
+      description: ''
+      operationId: user-post
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+        '400':
+          description: Incorrect request body. Please, supply the correct request body and try again
+        '401':
+          description: Login required
+        '403':
+          description: User is not authorized to make request
+        '404':
+          description: Requested resource not found
+        '500':
+          description: Unexpected error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user'
+    put:
+      summary: 'Update a user'
+      description: ''
+      operationId: user-put
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: Incorrect request body. Please, supply the correct request body and try again
+        '401':
+          description: Login required
+        '403':
+          description: User is not authorized to make request
+        '404':
+          description: Requested resource not found
+        '500':
+          description: Unexpected error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user'
+  /session:
+    post:
+      summary: 'Create session'
+      description: ''
+      operationId: session-create
+      security:
+        - {}
+      responses:
+        '201':
+          description: Session created
+          headers:
+            Authorization:
+              schema:
+                type: string
+                description: Generated session token
+        '400':
+          description: Incorrect request body. Please, supply the correct request body and try again
+        '401':
+          description: Login required
+        '403':
+          description: User is not authorized to make request
+        '404':
+          description: Requested resource not found
+        '500':
+          description: Unexpected error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/authRequest'
+    delete:
+      summary: 'Invalidate session'
+      description: ''
+      operationId: session-delete
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+          required: true
+          description: Auth token
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Incorrect request parameters. Please, supply the correct parameters and try again
+        '401':
+          description: Login required
+        '403':
+          description: User is not authorized to recieve the data requested
+        '404':
+          description: Requested resource not found
+        '500':
+          description: Unexpected error
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    task:
+      type: object
+      format: json
+      required:
+        - title
+        - description
+        - userId
+      properties:
+        title:
+          type: string
+          description: Task title
+        description:
+          type: string
+          description: Task descrption
+        userId:
+          type: number
+          description: Identifier of user that owns the task
+        updateDate:
+          type: string
+          format: date-time
+          description: Last modification date of the task
+    user:
+      type: object
+      format: json
+      required:
+        - name
+        - lastName
+        - login
+        - updateDate
+      properties:
+        name:
+          type: string
+          description: User name
+        lastName:
+          type: string
+          description: User last name
+        login:
+          type: string
+          description: User login
+        password:
+          type: string
+          description: User password
+        updateDate:
+          type: string
+          format: date-time
+          description: Last modification date of the task
+    authRequest:
+      type: object
+      format: json
+      required:
+        - login
+        - password
+      properties:
+        name:
+          type: string
+          description: User name
+        lastName:
+          type: string
+          description: User last name
+        login:
+          type: string
+          description: User login
+        password:
+          type: string
+          description: User password
+        updateDate:
+          type: string
+          format: date-time
+          description: Last modification date of the task
+security:
+  - bearerAuth: []
+
+
