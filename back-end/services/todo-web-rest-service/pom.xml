@@ -56,6 +56,14 @@
         </dependency>
         <dependency>
             <groupId>com.apanin.todo</groupId>
+            <artifactId>user-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.apanin.todo</groupId>
+            <artifactId>session-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.apanin.todo</groupId>
             <artifactId>config-api</artifactId>
         </dependency>
         <dependency>

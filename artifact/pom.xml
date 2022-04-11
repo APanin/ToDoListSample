@@ -19,23 +19,92 @@
         </dependency>
         <dependency>
             <groupId>com.apanin.todo</groupId>
+            <artifactId>config-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.apanin.todo</groupId>
             <artifactId>todo-web-rest-service</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
+            <groupId>com.apanin.todo</groupId>
+            <artifactId>task-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
+            <groupId>com.apanin.todo</groupId>
+            <artifactId>exception-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
+            <groupId>com.apanin.todo</groupId>
+            <artifactId>entity</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
+            <groupId>com.apanin.todo</groupId>
+            <artifactId>user-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.apanin.todo</groupId>
+            <artifactId>session-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.apanin.todo</groupId>
+            <artifactId>db-repository</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.apanin.todo</groupId>
+            <artifactId>task-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.apanin.todo</groupId>
+            <artifactId>user-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.apanin.todo</groupId>
+            <artifactId>session-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.apanin.todo</groupId>
+            <artifactId>security-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.apanin.todo</groupId>
+            <artifactId>security-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>

@@ -4,7 +4,7 @@ import com.apanin.todo.config.api.WebConfig;
 import com.apanin.todo.sample.rest.api.TaskApiController;
 import com.apanin.todo.sample.rest.api.TasksApiController;
 import com.apanin.todo.sample.rest.model.Task;
-import com.apanin.todo.task.TaskServiceApi;
+import com.apanin.todo.task.TaskService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -23,7 +23,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -41,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class TaskRestServiceTest {
 
     @MockBean
-    private TaskServiceApi taskServiceApi;
+    private TaskService taskService;
 
     @MockBean
     private WebConfig webConfig;
@@ -59,9 +58,9 @@ public class TaskRestServiceTest {
         final Task task = new Task();
         task.setTitle("Test title");
         task.setDescription("Test description");
-        task.setUserId(BigDecimal.ONE);
+        task.setUserId(1L);
         task.setUpdateDate(OffsetDateTime.now());
-        Mockito.when(taskServiceApi.createTask(ArgumentMatchers.any())).thenReturn(1L);
+        Mockito.when(taskService.createTask(ArgumentMatchers.any())).thenReturn(1L);
         Mockito.when(webConfig.getBaseUrl()).thenReturn("http://localhost:8080");
         mockMvc.perform(post("/task", 1L)
                         .content(objectMapper.writeValueAsString(task)).contentType(MediaType.APPLICATION_JSON))
@@ -74,7 +73,7 @@ public class TaskRestServiceTest {
         final Task task = new Task();
         task.setTitle("Test title");
         task.setDescription("Test description");
-        task.setUserId(BigDecimal.ONE);
+        task.setUserId(1L);
         task.setUpdateDate(OffsetDateTime.now());
         Mockito.when(webConfig.getBaseUrl()).thenReturn("http://localhost:8080");
         mockMvc.perform(put("/task", 1L)
@@ -87,9 +86,9 @@ public class TaskRestServiceTest {
         final Task task = new Task();
         task.setTitle("Test title");
         task.setDescription("Test description");
-        task.setUserId(BigDecimal.ONE);
+        task.setUserId(1L);
         task.setUpdateDate(OffsetDateTime.now());
-        Mockito.when(taskServiceApi.getTask(1)).thenReturn(task);
+        Mockito.when(taskService.getTask(1)).thenReturn(task);
         Mockito.when(webConfig.getBaseUrl()).thenReturn("http://localhost:8080");
         mockMvc.perform(get("/task/{taskId}", 1L))
                 .andExpect(status().isOk())
@@ -101,11 +100,12 @@ public class TaskRestServiceTest {
         final Task task = new Task();
         task.setTitle("Test title");
         task.setDescription("Test description");
-        task.setUserId(BigDecimal.ONE);
+        task.setUserId(1L);
         task.setUpdateDate(OffsetDateTime.now());
         final List<Task> taskList = Collections.singletonList(task);
-        Mockito.when(taskServiceApi.listTasks(1, 10, 1)).thenReturn(taskList);
+        Mockito.when(taskService.listTasks(1, 1)).thenReturn(taskList);
         Mockito.when(webConfig.getBaseUrl()).thenReturn("http://localhost:8080");
+        Mockito.when(webConfig.getItemsOnPage()).thenReturn(10);
         mockMvc.perform(get("/tasks/{userId}", 1L).param("limit", "10").param("after_id",
                         "1"))
                 .andExpect(status().isOk())

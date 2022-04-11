@@ -13,6 +13,10 @@
     <packaging>pom</packaging>
     <modules>
         <module>todo-web-rest-service</module>
+        <module>session-service</module>
+        <module>user-service</module>
+        <module>task-service</module>
+        <module>security-service</module>
     </modules>
 
 </project>

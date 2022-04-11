@@ -6,7 +6,7 @@ import com.apanin.todo.exception.TechnicalException;
 import com.apanin.todo.sample.rest.api.TaskApiDelegate;
 import com.apanin.todo.sample.rest.api.TasksApiDelegate;
 import com.apanin.todo.sample.rest.model.Task;
-import com.apanin.todo.task.TaskServiceApi;
+import com.apanin.todo.task.TaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +24,11 @@ public class TaskController implements TaskApiDelegate, TasksApiDelegate {
 
     private final String TASK_GET_URL_PART = "/task/";
 
-    private final TaskServiceApi taskServiceApi;
+    private final TaskService taskService;
     private final WebConfig webConfig;
 
-    public TaskController(@Autowired TaskServiceApi taskServiceApi, @Autowired WebConfig webConfig) {
-        this.taskServiceApi = taskServiceApi;
+    public TaskController(@Autowired TaskService taskService, @Autowired WebConfig webConfig) {
+        this.taskService = taskService;
         this.webConfig = webConfig;
     }
 
@@ -39,13 +39,13 @@ public class TaskController implements TaskApiDelegate, TasksApiDelegate {
     }
 
     @Override
-    public ResponseEntity<List<Task>> tasksGet(Long userId, Integer limit, Integer afterId) {
+    public ResponseEntity<List<Task>> tasksGet(Long userId, Integer page) {
         try {
-            return ResponseEntity.ok(taskServiceApi.listTasks(userId, limit, afterId));
+            return ResponseEntity.ok(taskService.listTasks(userId, page));
         } catch (BusinessException e) {
             logger.error(e.getMessage(), e);
             return ResponseEntity.badRequest().build();
-        } catch (TechnicalException e) {
+        } catch (TechnicalException | RuntimeException e) {
             logger.error(e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
         }
@@ -54,12 +54,12 @@ public class TaskController implements TaskApiDelegate, TasksApiDelegate {
     @Override
     public ResponseEntity<Void> taskDelete(Long taskId) {
         try {
-            taskServiceApi.deleteTask(taskId);
+            taskService.deleteTask(taskId);
             return ResponseEntity.noContent().build();
         } catch (BusinessException e) {
             logger.error(e.getMessage(), e);
             return ResponseEntity.badRequest().build();
-        } catch (TechnicalException e) {
+        } catch (TechnicalException | RuntimeException e) {
             logger.error(e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
         }
@@ -68,11 +68,11 @@ public class TaskController implements TaskApiDelegate, TasksApiDelegate {
     @Override
     public ResponseEntity<Task> taskGet(Long taskId) {
         try {
-            return ResponseEntity.ok(taskServiceApi.getTask(taskId));
+            return ResponseEntity.ok(taskService.getTask(taskId));
         } catch (BusinessException e) {
             logger.error(e.getMessage(), e);
             return ResponseEntity.badRequest().build();
-        } catch (TechnicalException e) {
+        } catch (TechnicalException | RuntimeException e) {
             logger.error(e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
         }
@@ -81,12 +81,12 @@ public class TaskController implements TaskApiDelegate, TasksApiDelegate {
     @Override
     public ResponseEntity<Task> taskPost(Task task) {
         try {
-            final long taskId = taskServiceApi.createTask(task);
+            final long taskId = taskService.createTask(task);
             return ResponseEntity.created(URI.create(webConfig.getBaseUrl() + TASK_GET_URL_PART + taskId)).build();
         } catch (BusinessException e) {
             logger.error(e.getMessage(), e);
             return ResponseEntity.badRequest().build();
-        } catch (TechnicalException e) {
+        } catch (TechnicalException | RuntimeException e) {
             logger.error(e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
         }
@@ -95,12 +95,12 @@ public class TaskController implements TaskApiDelegate, TasksApiDelegate {
     @Override
     public ResponseEntity<Void> taskPut(Task task) {
         try {
-            taskServiceApi.updateTask(task);
+            taskService.updateTask(task);
             return ResponseEntity.noContent().build();
         } catch (BusinessException e) {
             logger.error(e.getMessage(), e);
             return ResponseEntity.badRequest().build();
-        } catch (TechnicalException e) {
+        } catch (TechnicalException | RuntimeException e) {
             logger.error(e.getMessage(), e);
             return ResponseEntity.internalServerError().build();
         }

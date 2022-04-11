@@ -6,10 +6,10 @@ import com.apanin.todo.sample.rest.model.Task;
 
 import java.util.List;
 
-public interface TaskServiceApi {
+public interface TaskService {
     long createTask(Task task) throws BusinessException, TechnicalException;
     void updateTask(Task task) throws BusinessException, TechnicalException;
     void deleteTask(long taskId) throws BusinessException, TechnicalException;
     Task getTask(long id) throws BusinessException, TechnicalException;
-    List<Task> listTasks(long userId, int limit, int afterId) throws BusinessException, TechnicalException;
+    List<Task> listTasks(long userId, int pageNumber) throws BusinessException, TechnicalException;
 }
