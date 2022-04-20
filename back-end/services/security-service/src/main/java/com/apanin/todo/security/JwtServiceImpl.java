@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.xml.bind.DatatypeConverter;
+import java.nio.charset.Charset;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,7 +30,8 @@ public class JwtServiceImpl implements JwtService {
 
     private final SecurityParams params;
 
-    private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private static final String jwtSecret = "RTFTt6lvR8tUDMfMvsBJPiTvaADhEITUAgXCxaEGz1BzDLFPsg3ZmsRJCTQzMAhyuEdsKM8MfdSDsp92";
+    private static final String jwtIssuer = "apanin.com";
 
     public JwtServiceImpl(@Autowired SecurityParams params) {
         this.params = params;
@@ -37,38 +39,41 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public String generate(UserDetails userDetails) {
-        final Map<String, Object> claims = new HashMap<>();
-        return Jwts.builder().setClaims(claims).setSubject(userDetails.getUsername())
+        return Jwts.builder().setSubject(userDetails.getUsername()).setIssuer(jwtIssuer)
                 .setIssuedAt(new Date(System.currentTimeMillis())).setExpiration(new Date(System.currentTimeMillis()
-                        + params.getJwtTtl())).signWith(key).compact();
+                        + params.getJwtTtl())).signWith(SignatureAlgorithm.HS256, jwtSecret).compact();
     }
 
     @Override
     public boolean validate(UserDetails userDetails, String token) {
         final String username = getUserLogin(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        return (username.equals(userDetails.getUsername()) && validate(token)) && getExpirationDate(token).after(new Date());
     }
 
     @Override
     public String getUserLogin(String token) {
-        return getClaimFromToken(token, Claims::getSubject);
+        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
     }
 
-    private Boolean isTokenExpired(String token) {
-        final Date expiration = getExpirationDateFromToken(token);
-        return expiration.before(new Date());
+    private Date getExpirationDate(String token) {
+        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getExpiration();
     }
 
-    private Date getExpirationDateFromToken(String token) {
-        return getClaimFromToken(token, Claims::getExpiration);
-    }
-
-    private <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = getAllClaimsFromToken(token);
-        return claimsResolver.apply(claims);
-    }
-
-    private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+    private boolean validate(String token) {
+        try {
+            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
+            return true;
+        } catch (SignatureException ex) {
+            logger.error("Invalid JWT signature - {}", ex.getMessage());
+        } catch (MalformedJwtException ex) {
+            logger.error("Invalid JWT token - {}", ex.getMessage());
+        } catch (ExpiredJwtException ex) {
+            logger.error("Expired JWT token - {}", ex.getMessage());
+        } catch (UnsupportedJwtException ex) {
+            logger.error("Unsupported JWT token - {}", ex.getMessage());
+        } catch (IllegalArgumentException ex) {
+            logger.error("JWT claims string is empty - {}", ex.getMessage());
+        }
+        return false;
     }
 }

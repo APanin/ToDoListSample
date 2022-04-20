@@ -1,23 +1,24 @@
 openapi: 3.0.0
-
 info:
   description: ToDo list sample app web frontend API
   version: 1.0.0
   title: ToDo-Web-API
+servers:
+  - url: localhost
+    variables:
+      port:
+        enum:
+          - '8080'
+        default: '8080'
+      basePath:
+        default: api
 paths:
-  /tasks/{userId}:
+  /tasks:
     get:
       summary: 'List todo items by user'
       description: ''
       operationId: tasks-get
       parameters:
-        - in: path
-          name: userId
-          schema:
-            type: integer
-            format: int64
-          required: true
-          description: User identifier
         - in: query
           name: page
           schema:
@@ -280,6 +281,66 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/user'
+  /roles:
+    get:
+      summary: 'List all roles'
+      description: ''
+      operationId: roles-get
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: The number of items to return
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/role'
+        '400':
+          description: Incorrect request parameters. Please, supply the correct parameters and try again
+        '401':
+          description: Login required
+        '403':
+          description: User is not authorized to recieve the data requested
+        '404':
+          description: Requested resource not found
+        '500':
+          description: Unexpected error
+  /permissions:
+    get:
+      summary: 'List all permissions'
+      description: ''
+      operationId: permissions-get
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: The number of items to return
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/permission'
+        '400':
+          description: Incorrect request parameters. Please, supply the correct parameters and try again
+        '401':
+          description: Login required
+        '403':
+          description: User is not authorized to recieve the data requested
+        '404':
+          description: Requested resource not found
+        '500':
+          description: Unexpected error
   /session:
     post:
       summary: 'Create session'
@@ -295,6 +356,10 @@ paths:
               schema:
                 type: string
                 description: Generated session token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
         '400':
           description: Incorrect request body. Please, supply the correct request body and try again
         '401':
@@ -310,30 +375,32 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/authRequest'
-    delete:
-      summary: 'Invalidate session'
+  /session/authorization/{endpointUrl}:
+    get:
+      summary: 'Check whether user can access endpoint'
       description: ''
-      operationId: session-delete
+      operationId: session-authorization
       parameters:
-        - in: header
-          name: Authorization
+        - in: path
+          name: endpointUrl
           schema:
             type: string
           required: true
-          description: Auth token
+          description: Endpoint url
       responses:
-        '204':
-          description: No Content
+        '200':
+          description: Ok, user can access the endpoint
         '400':
           description: Incorrect request parameters. Please, supply the correct parameters and try again
         '401':
           description: Login required
         '403':
-          description: User is not authorized to recieve the data requested
+          description: User is not authorized to access the endpoint
         '404':
           description: Requested resource not found
         '500':
           description: Unexpected error
+
 components:
   securitySchemes:
     bearerAuth:
@@ -344,10 +411,14 @@ components:
     superUpdateIdPageable:
       type: object
       format: json
+      required:
+        - version
       properties:
         id:
           type: integer
           format: int64
+        version:
+          type: integer
         updateDate:
           type: string
           format: date-time
@@ -366,7 +437,7 @@ components:
       required:
         - title
         - description
-        - userId
+        - isDone
       properties:
         title:
           type: string
@@ -374,6 +445,9 @@ components:
         description:
           type: string
           description: Task descrption
+        isDone:
+          type: boolean
+          description: Task state
         userId:
           type: integer
           format: int64
@@ -387,7 +461,6 @@ components:
         - name
         - lastName
         - login
-        - updateDate
       properties:
         name:
           type: string
@@ -411,11 +484,13 @@ components:
           items:
             $ref: '#/components/schemas/role'
     role:
+      allOf:
+        - $ref: '#/components/schemas/superUpdateIdPageable'
       type: object
       format: json
       required:
-        - login
-        - password
+        - name
+        - permissions
       properties:
         name:
           type: string
@@ -423,6 +498,22 @@ components:
         description:
           type: string
           description: Role description
+        permissions:
+          type: array
+          description: Role permissions
+          items:
+            $ref: '#/components/schemas/permission'
+    permission:
+      allOf:
+        - $ref: '#/components/schemas/superUpdateIdPageable'
+      type: object
+      format: json
+      required:
+        - route
+      properties:
+        route:
+          type: string
+          description: Permitted route
     authRequest:
       type: object
       format: json

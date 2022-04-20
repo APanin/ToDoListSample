@@ -39,9 +39,9 @@ public class TaskController implements TaskApiDelegate, TasksApiDelegate {
     }
 
     @Override
-    public ResponseEntity<List<Task>> tasksGet(Long userId, Integer page) {
+    public ResponseEntity<List<Task>> tasksGet(Integer page) {
         try {
-            return ResponseEntity.ok(taskService.listTasks(userId, page));
+            return ResponseEntity.ok(taskService.listTasks(page));
         } catch (BusinessException e) {
             logger.error(e.getMessage(), e);
             return ResponseEntity.badRequest().build();

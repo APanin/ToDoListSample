@@ -37,6 +37,21 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>com.apanin.todo</groupId>
+            <artifactId>security-service</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.apanin.todo</groupId>
+            <artifactId>security-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.apanin.todo</groupId>
+            <artifactId>user-service</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
             <scope>test</scope>

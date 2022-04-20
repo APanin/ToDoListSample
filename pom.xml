@@ -26,7 +26,7 @@
         <hsql.version>2.3.2</hsql.version>
         <junit.version>5.8.2</junit.version>
         <mockito.version>4.4.0</mockito.version>
-        <openapi.generator.version>5.3.1</openapi.generator.version>
+        <openapi.generator.version>5.3.0</openapi.generator.version>
         <javax.servlet.version>3.1.0</javax.servlet.version>
         <jackson.databind.version>2.13.2.2</jackson.databind.version>
         <jackson.version>2.13.2</jackson.version>
@@ -38,9 +38,10 @@
         <war.plugin.version>2.4</war.plugin.version>
         <compiler.plugin.version>3.8.1</compiler.plugin.version>
         <jjwt.version>0.11.2</jjwt.version>
-        <node.version>16.14.2</node.version>
+        <node.version>v16.14.2</node.version>
         <npm.version>8.6.0</npm.version>
         <frontend.maven.plugin.version>1.12.0</frontend.maven.plugin.version>
+        <maven.resources.plugin.version>3.0.2</maven.resources.plugin.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -113,6 +114,14 @@
                 <groupId>com.apanin.todo</groupId>
                 <artifactId>security-service</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.apanin.todo</groupId>
+                <artifactId>web-view</artifactId>
+                <version>${project.version}</version>
+                <classifier>assembly</classifier>
+                <type>zip</type>
+                <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
@@ -278,49 +287,11 @@
                                 <npmVersion>${npm.version}</npmVersion>
                             </configuration>
                         </execution>
-                        <execution>
-                            <id>npm install</id>
-                            <goals>
-                                <goal>npm</goal>
-                            </goals>
-                            <phase>generate-resources</phase>
-                            <configuration>
-                                <arguments>install</arguments>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>npm install rest client</id>
-                            <goals>
-                                <goal>npm</goal>
-                            </goals>
-                            <phase>generate-resources</phase>
-                            <configuration>
-                                <workingDirectory>${project.build.directory}/generated-sources/angular-client</workingDirectory>
-                                <arguments>install</arguments>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>npm build rest client</id>
-                            <goals>
-                                <goal>npm</goal>
-                            </goals>
-                            <phase>generate-resources</phase>
-                            <configuration>
-                                <workingDirectory>${project.build.directory}/generated-sources/angular-client</workingDirectory>
-                                <arguments>run build --base-href todo</arguments>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>npm run build</id>
-                            <goals>
-                                <goal>npm</goal>
-                            </goals>
-                            <phase>generate-resources</phase>
-                            <configuration>
-                                <arguments>run build --base-href todo</arguments>
-                            </configuration>
-                        </execution>
                     </executions>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${maven.resources.plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

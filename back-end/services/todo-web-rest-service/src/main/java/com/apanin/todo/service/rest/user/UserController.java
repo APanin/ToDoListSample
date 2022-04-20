@@ -1,5 +1,9 @@
 package com.apanin.todo.service.rest.user;
 
+import com.apanin.todo.sample.rest.api.PermissionsApiDelegate;
+import com.apanin.todo.sample.rest.api.RolesApiDelegate;
+import com.apanin.todo.sample.rest.model.Permission;
+import com.apanin.todo.sample.rest.model.Role;
 import com.apanin.todo.user.UserService;
 import com.apanin.todo.config.api.WebConfig;
 import com.apanin.todo.exception.BusinessException;
@@ -19,7 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-public class UserController implements UserApiDelegate, UsersApiDelegate {
+public class UserController implements UserApiDelegate, UsersApiDelegate, RolesApiDelegate, PermissionsApiDelegate {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final String USER_GET_URL_PART = "/user/";
@@ -96,6 +100,32 @@ public class UserController implements UserApiDelegate, UsersApiDelegate {
         try {
             userService.updateUser(user);
             return ResponseEntity.noContent().build();
+        } catch (BusinessException e) {
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.badRequest().build();
+        } catch (TechnicalException | RuntimeException e) {
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @Override
+    public ResponseEntity<List<Permission>> permissionsGet(Integer page) {
+        try {
+            return ResponseEntity.ok(userService.listPermissions(page));
+        } catch (BusinessException e) {
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.badRequest().build();
+        } catch (TechnicalException | RuntimeException e) {
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @Override
+    public ResponseEntity<List<Role>> rolesGet(Integer page) {
+        try {
+            return ResponseEntity.ok(userService.listRoles(page));
         } catch (BusinessException e) {
             logger.error(e.getMessage(), e);
             return ResponseEntity.badRequest().build();

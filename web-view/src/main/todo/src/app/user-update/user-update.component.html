@@ -1,0 +1,41 @@
+<div class="main-div">
+  <mat-card class="user-update-card">
+    <mat-card-title>Edit user</mat-card-title>
+    <mat-card-subtitle>Edit or create user</mat-card-subtitle>
+    <form [formGroup]=userUpdateForm (ngSubmit)="onSubmit()">
+      <mat-card-content>
+        <div class="user-update-container">
+          <mat-form-field appearance="fill" floatLabel="always">
+            <mat-label>User name</mat-label>
+            <input matInput id="name" type="text" class="user-update-right-align" formControlName="name">
+          </mat-form-field>
+          <mat-form-field appearance="fill" floatLabel="always">
+            <mat-label>User last name</mat-label>
+            <input matInput id="lastName" type="text" class="user-update-right-align" formControlName="lastName">
+          </mat-form-field>
+          <mat-form-field appearance="fill" floatLabel="always">
+            <mat-label>User login</mat-label>
+            <input matInput id="login" type="text" class="user-update-right-align" formControlName="login">
+          </mat-form-field>
+          <mat-form-field appearance="fill" floatLabel="always">
+            <mat-label>User password</mat-label>
+            <input matInput id="password" [type]="hide ? 'password' : 'text'" formControlName="password">
+            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-select [(ngModel)]="selectedRoles" name="roles" multiple>
+              <mat-option *ngFor="let role of roles" [value]="selectedRoles">
+                {{role.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button type="submit">Submit</button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+</div>

@@ -1,35 +1,21 @@
 package com.apanin.todo.entity;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import java.util.Date;
+import javax.persistence.Table;
 import java.util.Set;
 
 @Entity
-public class UserEntity {
-    @Id
-    @GeneratedValue
-    private Long id;
-
+@Table(name = "user")
+public class UserEntity extends SuperIdUpdateEntity {
     private String name;
     private String lastName;
     private String login;
     private String password;
-    private Date updateDate;
     @ManyToMany
     @JoinTable(name = "users_to_roles")
     private Set<RoleEntity> roles;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -63,14 +49,6 @@ public class UserEntity {
         this.password = password;
     }
 
-    public Date getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
-    }
-
     public Set<RoleEntity> getRoles() {
         return roles;
     }
@@ -78,4 +56,5 @@ public class UserEntity {
     public void setRoles(Set<RoleEntity> roles) {
         this.roles = roles;
     }
+
 }

@@ -1,6 +1,7 @@
 package com.apanin.todo.config.security;
 
 import com.apanin.todo.exception.BusinessException;
+import com.apanin.todo.security.AuthEntryPointJwt;
 import com.apanin.todo.security.JwtTokenFilter;
 import com.apanin.todo.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,11 +27,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserService userService;
     private final JwtTokenFilter jwtTokenFilter;
+    private final AuthEntryPointJwt authEntryPointJwt;
 
 
-    public SecurityConfig(@Autowired UserService userService, @Autowired JwtTokenFilter jwtTokenFilter) {
+    public SecurityConfig(@Autowired UserService userService, @Autowired JwtTokenFilter jwtTokenFilter,
+                          @Autowired AuthEntryPointJwt authEntryPointJwt) {
         this.userService = userService;
         this.jwtTokenFilter = jwtTokenFilter;
+        this.authEntryPointJwt = authEntryPointJwt;
     }
 
     @Override
@@ -41,13 +49,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+        return source;
+    }
+
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public AuthenticationManager customAuthenticationManager() throws Exception {
-        return authenticationManager();
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManager();
     }
 
     @Override
@@ -57,9 +73,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http = http.exceptionHandling().authenticationEntryPoint((request, response, ex) -> {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
                         }).and();
-        http.authorizeRequests().antMatchers("/user/**").hasRole("ADMIN")
-                .antMatchers("/users/**").hasRole("ADMIN")
-                .anyRequest().authenticated();
+        http.authorizeRequests().antMatchers("/index.html", "/*.js", "/*.css", "/*.ico",
+                        "/swagger-ui/**", "/swagger-ui.html", "/login", "/session").permitAll()
+                .antMatchers("/user/**").hasAuthority("admin")
+                .antMatchers("/users/**").hasAuthority("admin")
+                .anyRequest().authenticated().and()
+                .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login")
+                .and().exceptionHandling().authenticationEntryPoint(authEntryPointJwt).and().sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

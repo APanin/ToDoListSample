@@ -11,5 +11,5 @@ public interface TaskService {
     void updateTask(Task task) throws BusinessException, TechnicalException;
     void deleteTask(long taskId) throws BusinessException, TechnicalException;
     Task getTask(long id) throws BusinessException, TechnicalException;
-    List<Task> listTasks(long userId, int pageNumber) throws BusinessException, TechnicalException;
+    List<Task> listTasks(int pageNumber) throws BusinessException, TechnicalException;
 }

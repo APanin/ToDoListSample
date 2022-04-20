@@ -5,11 +5,14 @@ import com.apanin.todo.exception.BusinessException;
 import com.apanin.todo.exception.TechnicalException;
 import com.apanin.todo.sample.rest.api.SessionApiDelegate;
 import com.apanin.todo.sample.rest.model.AuthRequest;
+import com.apanin.todo.sample.rest.model.User;
 import com.apanin.todo.service.rest.user.UserController;
+import com.apanin.todo.session.AuthResponse;
 import com.apanin.todo.session.SessionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -30,11 +33,11 @@ public class SessionController implements SessionApiDelegate {
     }
 
     @Override
-    public ResponseEntity<Void> sessionCreate(AuthRequest authRequest) {
+    public ResponseEntity<User> sessionCreate(AuthRequest authRequest) {
         try {
-            final String sessionToken = sessionService.createSession(authRequest);
+            final AuthResponse response = sessionService.createSession(authRequest);
             return ResponseEntity.created(URI.create(webConfig.getBaseUrl() + SESSION_GET_URL_PART))
-                    .header("Authorization", sessionToken).build();
+                    .header("Authorization", response.getToken()).body(response.getUser());
         } catch (BusinessException e) {
             logger.error(e.getMessage(), e);
             return ResponseEntity.badRequest().build();
@@ -45,10 +48,10 @@ public class SessionController implements SessionApiDelegate {
     }
 
     @Override
-    public ResponseEntity<Void> sessionDelete(String token) {
+    public ResponseEntity<Void> sessionAuthorization( String endpointUrl) {
         try {
-            sessionService.deleteSession(token);
-            return ResponseEntity.noContent().build();
+            final boolean isAuthorized = sessionService.isUserAuthorizedForEndpoint(endpointUrl);
+            return isAuthorized ? ResponseEntity.ok().build() : new ResponseEntity<>(HttpStatus.FORBIDDEN);
         } catch (BusinessException e) {
             logger.error(e.getMessage(), e);
             return ResponseEntity.badRequest().build();

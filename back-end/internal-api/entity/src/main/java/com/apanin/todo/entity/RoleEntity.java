@@ -1,25 +1,19 @@
 package com.apanin.todo.entity;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import java.util.Set;
 
 @Entity
-public class RoleEntity {
-    @Id
-    @GeneratedValue
-    private Long id;
-
+@Table(name = "role")
+public class RoleEntity extends SuperIdUpdateEntity {
     private String name;
     private String description;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @ManyToMany
+    @JoinTable(name = "roles_to_permissions")
+    private Set<PermissionEntity> permissions;
 
     public String getName() {
         return name;
@@ -36,4 +30,13 @@ public class RoleEntity {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public Set<PermissionEntity> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(Set<PermissionEntity> permissions) {
+        this.permissions = permissions;
+    }
+
 }

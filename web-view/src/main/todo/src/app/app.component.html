@@ -1,0 +1,27 @@
+<div *ngIf="authenticated"><app-header (open)="navOpen($event)"></app-header></div>
+<div>
+  <mat-sidenav-container>
+    <mat-sidenav #sidenav mode="side">
+      <mat-nav-list>
+        <mat-list-item>
+          <a [routerLink]="['/task-list']">Task list</a>
+        </mat-list-item>
+        <mat-list-item *ngIf="isAdmin()">
+          <a [routerLink]="['/user-list']">User list</a>
+        </mat-list-item>
+        <mat-list-item>
+          <button mat-button (click)="logout()">Logout</button>
+        </mat-list-item>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <div style="flex: 1 1 auto!important;">
+        <router-outlet></router-outlet>
+      </div>
+      <app-footer></app-footer>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>
+
+
+

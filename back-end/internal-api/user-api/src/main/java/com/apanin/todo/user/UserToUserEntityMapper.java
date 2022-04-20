@@ -18,10 +18,10 @@ public interface UserToUserEntityMapper {
     User userEntityToUser(UserEntity entity);
 
     default Date map(OffsetDateTime value) {
-        return Date.from(value.toInstant());
+        return value == null ? null : Date.from(value.toInstant());
     }
 
     default OffsetDateTime map(Date value) {
-        return OffsetDateTime.ofInstant(Instant.ofEpochMilli(value.getTime()), ZoneId.systemDefault());
+        return value == null ? null : OffsetDateTime.ofInstant(Instant.ofEpochMilli(value.getTime()), ZoneId.systemDefault());
     }
 }

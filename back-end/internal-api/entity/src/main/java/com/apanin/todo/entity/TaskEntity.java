@@ -1,31 +1,14 @@
 package com.apanin.todo.entity;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import java.util.Date;
+import javax.persistence.Table;
 
 @Entity
-public class TaskEntity {
-
-    @Id
-    @GeneratedValue
-    private Long id;
-
+@Table(name = "task")
+public class TaskEntity extends SuperIdUpdateEntity {
     private String title;
     private String description;
-    @ManyToOne
-    private UserEntity userEntity;
-    private Date updateDate;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private Boolean isDone;
 
     public String getTitle() {
         return title;
@@ -43,19 +26,12 @@ public class TaskEntity {
         this.description = description;
     }
 
-    public UserEntity getUser() {
-        return userEntity;
+    public boolean isDone() {
+        return isDone;
     }
 
-    public void setUser(UserEntity userEntity) {
-        this.userEntity = userEntity;
+    public void setDone(boolean done) {
+        isDone = done;
     }
 
-    public Date getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
-    }
 }

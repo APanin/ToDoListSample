@@ -5,6 +5,6 @@ import com.apanin.todo.exception.TechnicalException;
 import com.apanin.todo.sample.rest.model.AuthRequest;
 
 public interface SessionService {
-    String createSession(AuthRequest authRequest) throws BusinessException, TechnicalException;
-    void deleteSession(String token) throws BusinessException, TechnicalException;
+    AuthResponse createSession(AuthRequest authRequest) throws BusinessException, TechnicalException;
+    boolean isUserAuthorizedForEndpoint(String endpointUrl) throws BusinessException, TechnicalException;
 }

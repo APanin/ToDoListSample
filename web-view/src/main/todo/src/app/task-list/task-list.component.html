@@ -1,0 +1,33 @@
+<div class="main-div">
+  <mat-card class="task-list-card">
+    <mat-card-title>Task list</mat-card-title>
+    <mat-card-subtitle>List of tasks for current user</mat-card-subtitle>
+      <mat-card-content>
+        <mat-selection-list #taskList [(ngModel)]="selectedTasks" (ngModelChange)="onNgModelChange($event)">
+          <mat-list-option *ngFor="let task of tasks" [value]="task">
+            <div class="task-div">
+              <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Edit">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <a mat-menu-item [routerLink]="['/task-update', task.id]">
+                  <mat-icon>edit</mat-icon>
+                  <span>Edit</span>
+                </a>
+              </mat-menu>
+              <div class="task-info-div">
+                <h3 mat-line> {{task.title}} </h3>
+                <div mat-line> {{task.description}} </div>
+                <div mat-line> {{task.updateDate | date}}</div>
+                <mat-checkbox mat-line disabled="true" [checked]="task.isDone"> Is Done</mat-checkbox>
+              </div>
+            </div>
+          </mat-list-option>
+        </mat-selection-list>
+      </mat-card-content>
+    <mat-card-actions>
+      <a mat-button [routerLink]="['/task-update']">Create task</a>
+      <button mat-button (click)="onDelete()">Delete task</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

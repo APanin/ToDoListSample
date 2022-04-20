@@ -35,7 +35,7 @@ public class PersistenceJPAConfig{
     public DataSource dataSource(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.hsqldb.jdbcDriver");
-        dataSource.setUrl("jdbc:hsqldb:db/database");
+        dataSource.setUrl("jdbc:hsqldb:mem:testdb;DB_CLOSE_DELAY=-1");
         dataSource.setUsername( "sa" );
         dataSource.setPassword( "" );
         return dataSource;
@@ -53,9 +53,9 @@ public class PersistenceJPAConfig{
 
     Properties additionalProperties() {
         Properties properties = new Properties();
-        properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
+        properties.setProperty("hibernate.hbm2ddl.auto", "create");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
-
+        properties.setProperty("javax.persistence.sql-load-script-source", "META-INF/data.sql");
         return properties;
     }
 
