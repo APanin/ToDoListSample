@@ -1,0 +1,24 @@
+.main-div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.user-update-card {
+  max-width: 800px;
+}
+.user-update-container .mat-form-field + .mat-form-field .mat-checkbox {
+  margin-left: 8px;
+}
+
+.user-update-right-align {
+  text-align: right;
+}
+
+input.user-update-right-align::-webkit-outer-spin-button,
+input.user-update-right-align::-webkit-inner-spin-button {
+  display: none;
+}
+
+input.user-update-right-align {
+  -moz-appearance: textfield;
+}

@@ -1,0 +1,24 @@
+.main-div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.task-update-card {
+  max-width: 800px;
+}
+.task-update-container .mat-form-field + .mat-form-field .mat-checkbox {
+  margin-left: 8px;
+}
+
+.task-update-right-align {
+  text-align: right;
+}
+
+input.task-update-right-align::-webkit-outer-spin-button,
+input.task-update-right-align::-webkit-inner-spin-button {
+  display: none;
+}
+
+input.task-update-right-align {
+  -moz-appearance: textfield;
+}

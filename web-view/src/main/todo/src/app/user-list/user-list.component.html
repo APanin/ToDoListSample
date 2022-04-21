@@ -1,0 +1,36 @@
+<div class="main-div">
+  <mat-card class="user-list-card">
+    <mat-card-title>user list</mat-card-title>
+    <mat-card-subtitle>List of registered users</mat-card-subtitle>
+    <mat-card-content>
+      <mat-selection-list #userList [(ngModel)]="selectedUsers" (ngModelChange)="onNgModelChange($event)">
+        <mat-list-option *ngFor="let user of users" [value]="user">
+          <div class="user-div">
+            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Edit">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <a mat-menu-item [routerLink]="['/user-update', user.id]">
+                <mat-icon>edit</mat-icon>
+                <span>Edit</span>
+              </a>
+            </mat-menu>
+            <div class="user-info-div">
+              <h3 mat-line> {{user.name}} </h3>
+              <div mat-line> {{user.lastName}} </div>
+              <div mat-line> {{user.login}} </div>
+              <div *ngFor="let role of user.roles">
+                <div mat-line> {{role.name}} </div>
+              </div>
+              <div mat-line> {{user.updateDate | date}}</div>
+            </div>
+          </div>
+        </mat-list-option>
+      </mat-selection-list>
+    </mat-card-content>
+    <mat-card-actions>
+      <a mat-button [routerLink]="['/user-update']">Create user</a>
+      <button mat-button (click)="onDelete()">Delete user</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

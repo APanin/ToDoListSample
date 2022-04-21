@@ -1,0 +1,19 @@
+.main-div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.task-list-card {
+  width: 2000px;
+}
+
+.task-div {
+  display: flex;
+  flex-direction: row;
+}
+
+.task-info-div {
+  display: block;
+}
+
